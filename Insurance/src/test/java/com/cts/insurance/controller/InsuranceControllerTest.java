@@ -1,5 +1,6 @@
 package com.cts.insurance.controller;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -18,6 +19,11 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.cts.insurance.dto.Insurance;
+import com.cts.insurance.exception.DifferentQueryParam;
+import com.cts.insurance.exception.DuplicateEntry;
+import com.cts.insurance.exception.MissingQueryParam;
+import com.cts.insurance.exception.NoContentFound;
+import com.cts.insurance.exception.NoInsuranceForCustomerId;
 import com.cts.insurance.service.Insurance_ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,11 +68,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/add";
 
-//      assertThrows(MissingQueryParam.class, () -> {
+      assertThrows(MissingQueryParam.class, () -> {
 
 		Mockito.when(service.addInsurances(mockInsurance)).thenReturn(mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -84,11 +90,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/add";
 
-//      assertThrows(DifferentQueryParam.class, () -> {
+      assertThrows(DifferentQueryParam.class, () -> {
 
 		Mockito.when(service.addInsurances(mockInsurance)).thenReturn(mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -108,11 +114,11 @@ class InsuranceControllerTest {
 
 		Mockito.when(service.addInsurances(mockInsurance)).thenReturn(mockInsurance);
 
-//      assertThrows(DuplicateEntry.class, () -> {
+      assertThrows(DuplicateEntry.class, () -> {
 
 		Mockito.when(service.addInsurances(mockInsurance2)).thenReturn(mockInsurance2);
 
-//      });
+      });
 
 	}
 
@@ -164,11 +170,11 @@ class InsuranceControllerTest {
 
 		}
 
-//      assertThrows(MissingQueryParam.class, () -> {
+      assertThrows(MissingQueryParam.class, () -> {
 
 		Mockito.when(service.updateInsurances(mockInsurance)).thenReturn(mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -192,11 +198,11 @@ class InsuranceControllerTest {
 
 		}
 
-//      assertThrows(DifferentQueryParam.class, () -> {
+      assertThrows(DifferentQueryParam.class, () -> {
 
 		Mockito.when(service.updateInsurances(mockInsurance)).thenReturn(mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -220,11 +226,11 @@ class InsuranceControllerTest {
 
 		}
 
-//      assertThrows(DuplicateEntry.class, () -> {
+      assertThrows(DuplicateEntry.class, () -> {
 
 		Mockito.when(service.updateInsurances(mockInsurance)).thenReturn(mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -260,11 +266,10 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?customer_id=1234";
 
-//      assertThrows(DifferentQueryParam.class, () -> {
+      assertThrows(DifferentQueryParam.class, () -> {
 
 		Mockito.when(service.findInsuranceByCId("234")).thenReturn((List<Insurance>) mockInsurance);
-
-//      });
+      });
 
 	}
 
@@ -278,11 +283,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?customer_id=cus987";
 
-//      assertThrows(NoInsuranceForCustomerId.class, () -> {
+      assertThrows(NoInsuranceForCustomerId.class, () -> {
 
 		Mockito.when(service.findInsuranceByCId("cus1234")).thenReturn((List<Insurance>) mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -324,37 +329,13 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?insurance_id=15247898912";
 
+	      assertThrows(NoContentFound.class, () -> {
+
 		Mockito.when(service.findInsuranceByIId("1524789891912")).thenReturn(lis);
 
-//      RequestBuilder requestBuilder = MockMvcRequestBuilders.get(URI).accept(MediaType.APPLICATION_JSON);
-//
-//      mockMvc.perform(requestBuilder).andExpect(status().isOk());
-
+	      });
 	}
 
-//   @Test
-
-//   public void testfindInsuranceByIIdMissingQueryParam() throws Exception {
-
-//      Insurance mockInsurance = new Insurance("cus1234", "INSNAME1", "car");
-
-//      mockInsurance.setInsurance_id("1524789891234");
-
-//      String URI = "/insurance/service/get?insurance_id=";
-
-//      Mockito.when(service.findInsuranceByIId("1524789891234")).thenReturn(mockInsurance);
-
-//      RequestBuilder requestBuilder = MockMvcRequestBuilders.get(URI).accept(MediaType.APPLICATION_JSON);
-
-//      MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-//      String expectedJson = this.mapToJson(mockInsurance);
-
-//      String outputInJson = result.getResponse().getContentAsString();
-
-//      assertThat(outputInJson).isNotEqualTo(expectedJson);
-
-//   }
 
 	@Test
 
@@ -366,11 +347,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?insurance_id=152478989";
 
-//      assertThrows(DifferentQueryParam.class, () -> {
+      assertThrows(DifferentQueryParam.class, () -> {
 
 		Mockito.when(service.findInsuranceByIId("152478989")).thenReturn((List<Insurance>) mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -410,11 +391,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?insurance_id=&customer_id=";
 
-//      assertThrows(MissingQueryParam.class, () -> {
+      assertThrows(MissingQueryParam.class, () -> {
 
 		Mockito.when(service.throwMissing("", "")).thenReturn((List<Insurance>) mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -428,11 +409,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?insurance_id=cus1234&customer_id=1524789891234";
 
-//      assertThrows(DifferentQueryParam.class, () -> {
+      assertThrows(DifferentQueryParam.class, () -> {
 
 		Mockito.when(service.findInsuranceByIIdandCId("1524234", "cus4")).thenReturn((List<Insurance>) mockInsurance);
 
-//      });
+      });
 
 	}
 
@@ -446,11 +427,11 @@ class InsuranceControllerTest {
 
 		String URI = "/insurance/service/get?insurance_id=1524234&customer_id=cus4";
 
-//      assertThrows(DifferentQueryParam.class, () -> {
+      assertThrows(DifferentQueryParam.class, () -> {
 
 		Mockito.when(service.findInsuranceByIIdandCId("1524234", "cus4")).thenReturn((List<Insurance>) mockInsurance);
 
-//      });
+      });
 
 	}
 

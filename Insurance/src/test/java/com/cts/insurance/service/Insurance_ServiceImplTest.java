@@ -1,6 +1,7 @@
 package com.cts.insurance.service;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -11,6 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.cts.insurance.dto.Insurance;
+import com.cts.insurance.exception.DifferentQueryParam;
+import com.cts.insurance.exception.DuplicateEntry;
+import com.cts.insurance.exception.MissingQueryParam;
+import com.cts.insurance.exception.NoInsuranceForCustomerId;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,27 +35,27 @@ class Insurance_ServiceImplTest {
 	@Test()
 	public void createInsuranceMiss() {
 		Insurance insurance = new Insurance("", "INSName1", "car");
-		//assertThrows(MissingQueryParam.class, () -> {
+		assertThrows(MissingQueryParam.class, () -> {
 			service.addInsurances(insurance);
-		//});
+		});
 	}
 
 	@Test()
 	public void createInsuranceDifferent() {
 		Insurance insurance = new Insurance("123", "INSName1", "car");
-		//assertThrows(DifferentQueryParam.class, () -> {
+		assertThrows(DifferentQueryParam.class, () -> {
 			service.addInsurances(insurance);
-		//});
+		});
 	}
 
 	@Test()
 	public void createInsuranceDuplicate() {
 		Insurance insurance = new Insurance("cus12", "INSName1", "car");
 		Insurance insurance2 = new Insurance("cus12", "INSName1", "car");
-		//assertThrows(DuplicateEntry.class, () -> {
+		assertThrows(DuplicateEntry.class, () -> {
 			service.addInsurances(insurance);
 			service.addInsurances(insurance2);
-		//});
+		});
 	}
 
 	// PUT Methods
@@ -76,9 +81,9 @@ class Insurance_ServiceImplTest {
 		if (insurance.getInsurance_id().equalsIgnoreCase("9875312469874")) {
 			ins.setInsurance_id("9875312469874");
 		}
-		//assertThrows(MissingQueryParam.class, () -> {
+		assertThrows(MissingQueryParam.class, () -> {
 			service.updateInsurances(ins);
-		//});
+		});
 	}
 
 	@Test
@@ -90,9 +95,9 @@ class Insurance_ServiceImplTest {
 		if (insurance.getInsurance_id().equalsIgnoreCase("9875312469874")) {
 			ins.setInsurance_id("9875312469874");
 		}
-		//assertThrows(DifferentQueryParam.class, () -> {
+		assertThrows(DifferentQueryParam.class, () -> {
 			service.updateInsurances(ins);
-		//});
+		});
 	}
 
 	// GET Methods
@@ -116,23 +121,23 @@ class Insurance_ServiceImplTest {
 
 	@Test
 	public void getInsuranceByCIdDifferent() {
-		//assertThrows(DifferentQueryParam.class, () -> {
+		assertThrows(DifferentQueryParam.class, () -> {
 			service.findInsuranceByCId("9874");
-		//});
+		});
 	}
 
 	@Test
 	public void getInsuranceByIIdDifferent() {
-		//assertThrows(DifferentQueryParam.class, () -> {
+		assertThrows(DifferentQueryParam.class, () -> {
 			service.findInsuranceByIId("9874");
-		//});
+		});
 	}
 
 	@Test
 	public void getInsuranceByCIdNoInsurance() {
-		//assertThrows(NoInsuranceForCustomerId.class, () -> {
+		assertThrows(NoInsuranceForCustomerId.class, () -> {
 			service.findInsuranceByCId("cus0000");
-		//});
+		});
 	}
 
 	@Test()
@@ -150,8 +155,9 @@ class Insurance_ServiceImplTest {
 		Insurance insurance = new Insurance("cus743", "INSNoName", "corona");
 		service.addInsurances(insurance);
 		insurance.setInsurance_id("1237567894325");
-		List<Insurance> ins = service.findInsuranceByIIdandCId("1239567894325", "777");
-		assertEquals(null, ins);
+		assertThrows(DifferentQueryParam.class, () -> {
+			service.findInsuranceByIIdandCId("1239567894325", "777");
+		});
 	}
 	
 	@Test
@@ -159,37 +165,37 @@ class Insurance_ServiceImplTest {
 		Insurance insurance = new Insurance("cus999", "INSNAME99", "AC");
 		service.addInsurances(insurance);
 		insurance.setInsurance_id("1478523698745");
-		//assertThrows(NoInsuranceForCustomerId.class, () -> {
+		assertThrows(NoInsuranceForCustomerId.class, () -> {
 			service.findInsuranceByIIdandCId("1478523698745", "cus666");
-		//});
+		});
 	}
 	
 	@Test
 	public void getInsuranceByIIdMissing() {
-		//assertThrows(MissingQueryParam.class, () -> {
+		assertThrows(MissingQueryParam.class, () -> {
 			service.throwMissing("", "cus12345");
-		//});
+		});
 	}
 
 	@Test
 	public void getInsuranceByCIdMissing() {
-		//assertThrows(MissingQueryParam.class, () -> {
+		assertThrows(MissingQueryParam.class, () -> {
 			service.throwMissing("1234567892587", "");
-		//});
+		});
 	}
 
 	@Test
 	public void getInsuranceByIIdAndCIdMissing() {
-		//assertThrows(MissingQueryParam.class, () -> {
+		assertThrows(MissingQueryParam.class, () -> {
 			service.throwMissing("", "");
-		//});
+		});
 	}
 
 	@Test
 	public void getInsuranceByIIdAndCIdDifferent() {
-		//assertThrows(DifferentQueryParam.class, () -> {
+		assertThrows(DifferentQueryParam.class, () -> {
 			service.findInsuranceByIIdandCId("cus0000", "3421");
-		//});
+		});
 	}
 
 	@Test
